@@ -42,7 +42,13 @@ def import_and_predict(image_data, model):
         img = np.asarray(image)
         img = img / 255.0  # Normalization
         img_reshape = np.expand_dims(img, axis=0)
+        
+        st.write("Image reshaped:", img_reshape.shape)
+        
         prediction = model.predict(img_reshape)
+        
+        st.write("Prediction result:", prediction)
+        
         return prediction
     except Exception as e:
         st.error(f"Error in import_and_predict: {e}")
