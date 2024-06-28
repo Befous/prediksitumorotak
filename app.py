@@ -27,7 +27,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 @st.cache_resource
 def load_model():
     try:
-        model = tf.keras.models.load_model('./models/prediksi_tumor_otak.h5')
+        model = tf.keras.models.load_model('./prediksi_tumor_otak.h5')
         return model
     except Exception as e:
         st.sidebar.error(f"Error loading model: {e}")
