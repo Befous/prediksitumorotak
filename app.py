@@ -27,7 +27,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 @st.cache_resource
 def load_model():
     try:
-        model = tf.keras.models.load_model('./prediksi_tumor_otak.h5')
+        model = tf.keras.models.load_model('./models/prediksi_tumor_otak.h5')
         return model
     except Exception as e:
         st.sidebar.error(f"Error loading model: {e}")
@@ -50,9 +50,13 @@ def import_and_predict(image_data, model):
         st.write("Prediction result:", prediction)
         
         return prediction
+    except tf.errors.ResourceExhaustedError as e:
+        st.error(f"Resource exhausted error: {e}")
+    except tf.errors.InvalidArgumentError as e:
+        st.error(f"Invalid argument error: {e}")
     except Exception as e:
-        st.error(f"Error in import_and_predict: {e}")
-        return None
+        st.error(f"General error in import_and_predict: {e}")
+    return None
 
 def prediction_cls(prediction, class_names):
     return class_names[np.argmax(prediction)]
