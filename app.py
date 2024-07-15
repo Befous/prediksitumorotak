@@ -37,7 +37,7 @@ model = load_model()
 
 def import_and_predict(image_data, model):
     try:
-        size = (224, 224)
+        size = (512, 512)
         image = ImageOps.fit(image_data, size, Image.LANCZOS)
         img = np.asarray(image)
         img = img / 255.0  # Normalization
