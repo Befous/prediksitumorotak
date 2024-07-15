@@ -63,44 +63,59 @@ def prediction_cls(prediction, class_names):
 
 class_names = ['glioma', 'meningioma', 'notumor', 'pituitary']
 
-st.write("""
-    # Deteksi Tumor Otak
-""")
+# Add navigation
+st.sidebar.title("Navigasi")
+option = st.sidebar.radio("Pilih halaman:", ["Beranda", "Prediksi", "About Us"])
 
-file = st.file_uploader("", type=["jpg", "png"])
+if option == "Beranda":
+    st.title("Selamat Datang di Aplikasi Deteksi Tumor Otak")
+    st.write("""
+        Aplikasi ini dirancang untuk membantu mendeteksi jenis tumor otak berdasarkan gambar MRI.
+        Pilih halaman Prediksi untuk memulai diagnosis. Output dari predilsi ada 4: Glioma, Meningioma, Pituitary, dan Notumor
+    """)
+elif option == "Prediksi":
+    st.title("Deteksi Tumor Otak")
 
-if file is None:
-    st.text("Please upload an image file")
-else:
-    image = Image.open(file)
-    st.image(image, use_column_width=True)
-    
-    if model is not None:
-        try:
-            predictions = import_and_predict(image, model)
-            if predictions is not None:
-                accuracy = random.uniform(98, 99)
-                st.sidebar.error(f"Accuracy : {accuracy:.2f} %")
+    file = st.file_uploader("Unggah gambar MRI Anda", type=["jpg", "png"])
 
-                detected_class = prediction_cls(predictions, class_names)
-                result_string = f"Detected Disease : {detected_class}"
-                
-                if detected_class == 'notumor':
-                    st.balloons()
-                    st.sidebar.success(result_string)
+    if file is None:
+        st.text("Silakan unggah file gambar")
+    else:
+        image = Image.open(file)
+        st.image(image, use_column_width=True)
+        
+        if model is not None:
+            try:
+                predictions = import_and_predict(image, model)
+                if predictions is not None:
+                    accuracy = random.uniform(98, 99)
+                    st.sidebar.error(f"Accuracy : {accuracy:.2f} %")
+
+                    detected_class = prediction_cls(predictions, class_names)
+                    result_string = f"Detected Disease : {detected_class}"
+                    
+                    if detected_class == 'notumor':
+                        st.balloons()
+                        st.sidebar.success(result_string)
+                    else:
+                        st.sidebar.warning(result_string)
+                        st.markdown("## Remedy")
+                        
+                        if detected_class == 'glioma':
+                            st.info("Glioma adalah pertumbuhan sel yang dimulai di otak atau sumsum tulang belakang. Sel-sel dalam glioma terlihat mirip dengan sel-sel otak sehat yang disebut sel glial. Sel glial mengelilingi sel saraf dan membantunya berfungsi.")
+                        
+                        elif detected_class == 'meningioma':
+                            st.info("Meningioma adalah tumor yang terbentuk di meninges, yaitu selaput pelindung otak dan saraf tulang belakang. Tumor ini dapat membesar sehingga menekan otak dan saraf, serta dapat menimbulkan gejala yang parah.")
+                        
+                        elif detected_class == 'pituitary':
+                            st.info("Pituitary adalah tumor otak yang mulai tumbuh di kelenjar hipofisis. Kebanyakan tumor hipofisis bersifat non-kanker (jinak). Tumor jinak kelenjar pituitari juga disebut adenoma hipofisis. Kelenjar pituitari adalah kelenjar kecil yang terletak di sebuah lubang, tepat di belakang mata.")
                 else:
-                    st.sidebar.warning(result_string)
-                    st.markdown("## Remedy")
-                    
-                    if detected_class == 'glioma':
-                        st.info("Glioma adalah pertumbuhan sel yang dimulai di otak atau sumsum tulang belakang. Sel-sel dalam glioma terlihat mirip dengan sel-sel otak sehat yang disebut sel glial. Sel glial mengelilingi sel saraf dan membantunya berfungsi.")
-                    
-                    elif detected_class == 'meningioma':
-                        st.info("Meningioma adalah tumor yang terbentuk di meninges, yaitu selaput pelindung otak dan saraf tulang belakang. Tumor ini dapat membesar sehingga menekan otak dan saraf, serta dapat menimbulkan gejala yang parah.")
-                    
-                    elif detected_class == 'pituitary':
-                        st.info("Pituitary adalah tumor otak yang mulai tumbuh di kelenjar hipofisis. Kebanyakan tumor hipofisis bersifat non-kanker (jinak). Tumor jinak kelenjar pituitari juga disebut adenoma hipofisis. Kelenjar pituitari adalah kelenjar kecil yang terletak di sebuah lubang, tepat di belakang mata.")
-            else:
-                st.error("Prediction failed.")
-        except Exception as e:
-            st.error(f"Error during prediction: {e}")
+                    st.error("Prediction failed.")
+            except Exception as e:
+                st.error(f"Error during prediction: {e}")
+
+elif option == "About Us":
+    st.title("Tentang Kami")
+    st.write("""
+        Aplikasi prediksi tumor otak ini dibangun oleh 2 mahasiswa Universitas Logistik dan Bisnis Internasional, Ibrohim Mubarok dengan NPM 1214081 dan Aulia Maharani dengan NPM 1214079
+    """)
