@@ -88,8 +88,9 @@ elif option == "Prediksi":
             try:
                 predictions = import_and_predict(image, model)
                 if predictions is not None:
-                    accuracy = random.uniform(98, 99)
-                    st.sidebar.error(f"Accuracy : {accuracy:.2f} %")
+                    accuracy = np.max(predictions)
+                    accuracy_percent = accuracy * 100
+                    st.sidebar.error(f"Accuracy : {accuracy_percent:.2f}%")
 
                     detected_class = prediction_cls(predictions, class_names)
                     result_string = f"Detected Disease : {detected_class}"
